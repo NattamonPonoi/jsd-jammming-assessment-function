@@ -1,7 +1,7 @@
 // TODO: Get Client ID from https://developer.spotify.com/dashboard/ and put it here
-const clientId = "YOUR SPOTIFY CLIENT ID";
+const clientId = "6dd1b3b4592443798262ce6bb4772394";
 
-const redirectUri = "http://localhost:5173/";
+const redirectUri = "https://Nattamon-Jamming.surge.sh/";
 const spotifyUrl = `https://accounts.spotify.com/authorize?response_type=token&scope=playlist-modify-public&client_id=${clientId}&redirect_uri=${redirectUri}`;
 let accessToken = undefined;
 let expiresIn = undefined;
@@ -25,6 +25,7 @@ const Spotify = {
 
   async search(term) {
     const replaceEmptySpace = term.replace(" ", "%20");
+    const accessToken = this.getAccessToken();
     const searchUrl = `https://api.spotify.com/v1/search?type=track&q=${replaceEmptySpace}`;
     return fetch(searchUrl, {
       headers: {
@@ -47,6 +48,7 @@ const Spotify = {
   },
 
   async savePlaylist(name, trackIds) {
+    const accessToken = this.getAccessToken();
     if (Array.isArray(trackIds) && trackIds.length) {
       const createPlaylistUrl = `https://api.spotify.com/v1/me/playlists`;
       const response = await fetch(createPlaylistUrl, {
@@ -71,7 +73,7 @@ const Spotify = {
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
-            uris: trackIds.map((id) => "spotify:track:".concat(id)),
+            uris: trackIds,
           }),
         });
       }
